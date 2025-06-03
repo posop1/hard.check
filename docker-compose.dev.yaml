@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql
+    restart: unless-stopped
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    container_name: hardCheck-mysql
+    networks:
+      - hardCheck
+    environment:
+      MYSQL_ROOT_PASSWORD: 1!QQQqqq
+      MYSQL_DATABASE: hardCheck
+
+networks:
+  hardCheck:
+
+volumes:
+  mysql:

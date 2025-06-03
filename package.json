@@ -1,0 +1,33 @@
+{
+  "name": "hard.check",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "workspaces": [
+    "apps/*"
+  ],
+
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "start": "turbo run dev",
+    "predev": "pnpm --filter=backend run migrate:dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install"
+  },
+  "author": "Artur Yakhin",
+  "license": "BSD",
+  "devDependencies": {
+    "husky": "8.0.3",
+    "prettier": "^3.1.0",
+    "turbo": "latest",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv-cli": "^7.3.0"
+  },
+  "keywords": [],
+  "packageManager": "pnpm@10.5.2"
+}
