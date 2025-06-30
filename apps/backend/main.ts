@@ -6,8 +6,8 @@ import { PrismaClient } from "@prisma/client";
 
 import { httpLogger, logger } from "./libs";
 import { authRouter } from "./app/routes/auth";
-import { authMiddleware } from "./app/middlewares/authMiddleware";
 import { organizationRoute } from "./app/routes/organization";
+import { testRoute } from "./app/routes/test";
 
 export const app = express();
 
@@ -25,10 +25,7 @@ app.use(httpLogger);
 
 app.use("/auth", authRouter);
 app.use("/organization", organizationRoute);
-
-app.get("/test", authMiddleware, (req, res) => {
-	res.json("asds");
-});
+app.use("/test", testRoute);
 
 const startServer = async () => {
 	try {
