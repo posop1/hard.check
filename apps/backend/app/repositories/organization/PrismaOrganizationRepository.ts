@@ -37,7 +37,7 @@ async function createOrganization(params: { email: string; name: string; hashedP
 	}
 }
 
-async function getOrganizationById(id: number) {
+async function getOrganizationById(id: string) {
 	try {
 		const organization = await prisma.organization.findUnique({ where: { id: Number(id) } });
 

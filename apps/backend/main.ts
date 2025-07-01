@@ -29,6 +29,7 @@ app.use("/organization", organizationRoute);
 app.use("/test", testRoute);
 app.use("/question", questionRoute);
 
+// TODO подумать над безопасностью, сейчас пользователь из другой орги может удалять тесты другой
 const startServer = async () => {
 	try {
 		app.listen(PORT, () => {

@@ -16,6 +16,7 @@ export async function registerOrganization(
 	res: Response
 ) {
 	try {
+		// TODO не работает сессия
 		const registerDTO = RegisterDTOSchema.parse(req.body);
 
 		const { email, name, password } = registerDTO;
@@ -34,8 +35,17 @@ export async function registerOrganization(
 				expiresIn: "24h"
 			});
 
+			const expiresAt = new Date();
+			expiresAt.setHours(expiresAt.getHours() + 24);
+
+			await authRepo.createSession({
+				organizationId: organization.id,
+				token,
+				expiresAt
+			});
+
 			res.status(201).json({
-				id: organization?.id,
+				organizationId: organization?.id,
 				name: organization?.name,
 				email: organization?.email,
 				token
