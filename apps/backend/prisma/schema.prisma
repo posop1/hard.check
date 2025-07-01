@@ -30,6 +30,7 @@ model Test{
   organizationId    Int
   title String
   description String
+  postText String?
   questions Question[] 
   createdAt DateTime @default(now())
 }

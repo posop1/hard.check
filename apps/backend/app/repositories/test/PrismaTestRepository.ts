@@ -1,13 +1,29 @@
 import { logger } from "@/libs";
 import { prisma } from "@/main";
 
-async function createTest(params: { title: string; description: string; organizationId: number }) {
+async function findTestById(id: string) {
+	try {
+		const existingTest = await prisma.test.findUnique({ where: { id: Number(id) } });
+
+		return existingTest;
+	} catch (error) {
+		logger.error("ERROR: TEST REPO -  findTestById", error);
+	}
+}
+
+async function createTest(params: {
+	title: string;
+	description: string;
+	organizationId: number;
+	postText?: string;
+}) {
 	try {
 		const test = await prisma.test.create({
 			data: {
 				title: params.title,
 				organizationId: params.organizationId,
-				description: params.description
+				description: params.description,
+				postText: params.postText
 			},
 			include: {
 				questions: true
@@ -20,11 +36,11 @@ async function createTest(params: { title: string; description: string; organiza
 	}
 }
 
-async function getTests(organizationId: number) {
+async function getTests(organizationId: string) {
 	try {
 		const tests = await prisma.test.findMany({
 			where: {
-				organizationId
+				organizationId: Number(organizationId)
 			},
 			include: {
 				questions: true
@@ -37,12 +53,11 @@ async function getTests(organizationId: number) {
 	}
 }
 
-async function getTestById(organizationId: string, id: string) {
+async function getTestById(id: string) {
 	try {
 		const test = await prisma.test.findUnique({
 			where: {
-				id: Number(id),
-				organizationId: Number(organizationId)
+				id: Number(id)
 			},
 			include: {
 				questions: true
@@ -55,8 +70,47 @@ async function getTestById(organizationId: string, id: string) {
 	}
 }
 
+// TODO delete
+
+async function deleteTestById(id: string) {
+	try {
+		await prisma.test.delete({ where: { id: Number(id) } });
+
+		return true;
+	} catch (error) {
+		logger.error("ERROR: TEST REPO -  deleteTestById", error);
+	}
+}
+
+async function updateTestById(params: {
+	id: string;
+	title: string;
+	description: string;
+	postText?: string;
+}) {
+	try {
+		const { id, title, description, postText } = params;
+
+		const updatedTest = await prisma.test.update({
+			where: { id: Number(id) },
+			data: {
+				title,
+				description,
+				postText
+			}
+		});
+
+		return updatedTest;
+	} catch (error) {
+		logger.error("ERROR: TEST REPO -  updateTestById", error);
+	}
+}
+
 export const testRepo = {
 	getTests,
 	getTestById,
-	createTest
+	createTest,
+	updateTestById,
+	findTestById,
+	deleteTestById
 };
