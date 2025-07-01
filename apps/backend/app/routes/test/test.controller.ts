@@ -33,19 +33,21 @@ export async function updateTestById(req: Request, res: Response) {
 		const updateTestDTO = UpdateTestByIdDTOSchema.parse(req.body);
 		const updateTestParamsDTO = UpdateTestByIdParamsDTOSchema.parse(req.params);
 
-		const { title, description, postText } = updateTestDTO;
+		const { title, description, postText, difficulty, specialty } = updateTestDTO;
 		const { id } = updateTestParamsDTO;
 
-		const test = await testRepo.findTestById(id);
+		const test = await testRepo.findTest(id);
 		if (!test) {
 			return res.status(404).json({ message: "test not found" });
 		}
 
-		const updatedTest = await testRepo.updateTestById({
+		const updatedTest = await testRepo.updateTest({
 			id,
 			title,
 			description,
-			postText
+			postText,
+			difficulty,
+			specialty
 		});
 
 		res.status(200).json(updatedTest);
@@ -73,8 +75,6 @@ export async function getTests(req: Request, res: Response) {
 		}
 
 		res.status(200).json(tests);
-
-		logger.debug("getTests");
 	} catch (error) {
 		logger.error("ERROR: getTests - ", error);
 
@@ -115,12 +115,12 @@ export async function deleteTestById(req: Request, res: Response) {
 
 		const { id } = deleteTestByIdDTO;
 
-		const test = await testRepo.findTestById(id);
+		const test = await testRepo.findTest(id);
 		if (!test) {
 			return res.status(404).json({ message: "test not found" });
 		}
 
-		const isDeleted = await testRepo.deleteTestById(id);
+		const isDeleted = await testRepo.deleteTest(id);
 
 		if (isDeleted) {
 			res.status(200).json({

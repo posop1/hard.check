@@ -8,6 +8,7 @@ import { httpLogger, logger } from "./libs";
 import { authRouter } from "./app/routes/auth";
 import { organizationRoute } from "./app/routes/organization";
 import { testRoute } from "./app/routes/test";
+import { questionRoute } from "./app/routes/question";
 
 export const app = express();
 
@@ -26,6 +27,7 @@ app.use(httpLogger);
 app.use("/auth", authRouter);
 app.use("/organization", organizationRoute);
 app.use("/test", testRoute);
+app.use("/question", questionRoute);
 
 const startServer = async () => {
 	try {

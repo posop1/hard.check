@@ -32,6 +32,8 @@ model Test{
   description String
   postText String?
   questions Question[] 
+  difficulty String
+  specialty String
   createdAt DateTime @default(now())
 }
 
@@ -40,4 +42,6 @@ model Question {
   type String
   test Test @relation(fields: [testId], references: [id])
   testId Int
+  question String
+  answersCount Int?
 }

@@ -1,7 +1,7 @@
 import { logger } from "@/libs";
 import { prisma } from "@/main";
 
-async function findTestById(id: string) {
+async function findTest(id: string) {
 	try {
 		const existingTest = await prisma.test.findUnique({ where: { id: Number(id) } });
 
@@ -16,6 +16,8 @@ async function createTest(params: {
 	description: string;
 	organizationId: number;
 	postText?: string;
+	difficulty: string;
+	specialty: string;
 }) {
 	try {
 		const test = await prisma.test.create({
@@ -23,7 +25,9 @@ async function createTest(params: {
 				title: params.title,
 				organizationId: params.organizationId,
 				description: params.description,
-				postText: params.postText
+				postText: params.postText,
+				difficulty: params.difficulty,
+				specialty: params.specialty
 			},
 			include: {
 				questions: true
@@ -70,39 +74,41 @@ async function getTestById(id: string) {
 	}
 }
 
-// TODO delete
-
-async function deleteTestById(id: string) {
+async function deleteTest(id: string) {
 	try {
 		await prisma.test.delete({ where: { id: Number(id) } });
 
 		return true;
 	} catch (error) {
-		logger.error("ERROR: TEST REPO -  deleteTestById", error);
+		logger.error("ERROR: TEST REPO -  deleteTest", error);
 	}
 }
 
-async function updateTestById(params: {
+async function updateTest(params: {
 	id: string;
 	title: string;
 	description: string;
 	postText?: string;
+	difficulty: string;
+	specialty: string;
 }) {
 	try {
-		const { id, title, description, postText } = params;
+		const { id, title, description, postText, difficulty, specialty } = params;
 
 		const updatedTest = await prisma.test.update({
 			where: { id: Number(id) },
 			data: {
 				title,
 				description,
-				postText
+				postText,
+				difficulty,
+				specialty
 			}
 		});
 
 		return updatedTest;
 	} catch (error) {
-		logger.error("ERROR: TEST REPO -  updateTestById", error);
+		logger.error("ERROR: TEST REPO -  updateTest", error);
 	}
 }
 
@@ -110,7 +116,7 @@ export const testRepo = {
 	getTests,
 	getTestById,
 	createTest,
-	updateTestById,
-	findTestById,
-	deleteTestById
+	updateTest,
+	findTest,
+	deleteTest
 };
