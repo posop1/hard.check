@@ -6,7 +6,52 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxt/icon', '@nuxt/eslint'],
 
   css: ['~/assets/css/main.css'],
+  
   devServer: {
-    port: 5000,
+    port: 3000,
   },
+
+  // Настройка алиасов для FSD
+  alias: {
+    '~': '<rootDir>',
+    '@': '<rootDir>',
+    '@@': '<rootDir>',
+    '~/src': '<rootDir>/src',
+    '@/shared': '<rootDir>/src/shared',
+    '@/entities': '<rootDir>/src/entities',
+    '@/features': '<rootDir>/src/features',
+    '@/widgets': '<rootDir>/src/widgets',
+    '@/pages': '<rootDir>/src/pages',
+    '@/app': '<rootDir>/src/app',
+  },
+
+  // Автоимпорт компонентов из FSD структуры
+  components: [
+    '~/components',
+    {
+      path: '~/src/shared/ui',
+      prefix: 'Shared'
+    },
+    {
+      path: '~/src/entities',
+      pathPrefix: false,
+    },
+    {
+      path: '~/src/widgets',
+      pathPrefix: false,
+    }
+  ],
+
+  // Автоимпорт композиций
+  imports: {
+    dirs: [
+      'src/shared/lib',
+      'src/entities/*/model'
+    ]
+  },
+
+  // TypeScript конфигурация
+  typescript: {
+    typeCheck: true
+  }
 });
