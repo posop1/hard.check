@@ -6,7 +6,9 @@ import { PrismaClient } from "@prisma/client";
 
 import { httpLogger, logger } from "./libs";
 import { authRouter } from "./app/routes/auth";
-import { authMiddleware } from "./app/middlewares/authMiddleware";
+import { organizationRoute } from "./app/routes/organization";
+import { testRoute } from "./app/routes/test";
+import { questionRoute } from "./app/routes/question";
 
 export const app = express();
 
@@ -23,11 +25,11 @@ app.use(express.json());
 app.use(httpLogger);
 
 app.use("/auth", authRouter);
+app.use("/organization", organizationRoute);
+app.use("/test", testRoute);
+app.use("/question", questionRoute);
 
-app.get("/test", authMiddleware, (req, res) => {
-	res.json("asds");
-});
-
+// TODO подумать над безопасностью, сейчас пользователь из другой орги может удалять тесты другой
 const startServer = async () => {
 	try {
 		app.listen(PORT, () => {

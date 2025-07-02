@@ -9,12 +9,14 @@ import { ILoginDTO, LoginDTOSchema } from "./dto/login.dto";
 import { organizationRepo } from "@/app/repositories/organization/PrismaOrganizationRepository";
 import { JWT_SECRET } from "@/main";
 import { authRepo } from "@/app/repositories/auth/PrismaAuthRepository";
+import { LogoutAllDTOSchema } from "./dto/logoutAll.dto";
 
 export async function registerOrganization(
 	req: Request<never, never, IRegisterDTO>,
 	res: Response
 ) {
 	try {
+		// TODO не работает сессия
 		const registerDTO = RegisterDTOSchema.parse(req.body);
 
 		const { email, name, password } = registerDTO;
@@ -33,8 +35,17 @@ export async function registerOrganization(
 				expiresIn: "24h"
 			});
 
+			const expiresAt = new Date();
+			expiresAt.setHours(expiresAt.getHours() + 24);
+
+			await authRepo.createSession({
+				organizationId: organization.id,
+				token,
+				expiresAt
+			});
+
 			res.status(201).json({
-				id: organization?.id,
+				organizationId: organization?.id,
 				name: organization?.name,
 				email: organization?.email,
 				token
@@ -80,7 +91,12 @@ export async function login(req: Request<never, never, ILoginDTO>, res: Response
 			expiresAt
 		});
 
-		res.json({ token });
+		res.json({
+			token,
+			organizationId: organization.id,
+			email: organization.email,
+			name: organization.name
+		});
 	} catch (error) {
 		logger.error("ERROR: login - ", error);
 
@@ -114,9 +130,11 @@ export async function logout(req: Request, res: Response) {
 
 export async function logoutAll(req: Request, res: Response) {
 	try {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		//@ts-ignore
-		await authRepo.deleteAllSessions(req.organization.organizationId);
+		const logoutAllDTO = LogoutAllDTOSchema.parse(req.body);
+
+		const { organizationId } = logoutAllDTO;
+
+		await authRepo.deleteAllSessions(organizationId);
 
 		res.sendStatus(200);
 	} catch (error) {

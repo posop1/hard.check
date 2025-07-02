@@ -24,3 +24,24 @@ model Session {
   createdAt DateTime @default(now())
   expiresAt DateTime
 }
+
+model Test{
+  id        Int   @id @default(autoincrement())
+  organizationId    Int
+  title String
+  description String
+  postText String?
+  questions Question[] 
+  difficulty String
+  specialty String
+  createdAt DateTime @default(now())
+}
+
+model Question {
+  id        Int   @id @default(autoincrement())
+  type String
+  test Test @relation(fields: [testId], references: [id])
+  testId Int
+  question String
+  answersCount Int?
+}
