@@ -4,9 +4,13 @@
       <AuthForm />
     </div>
   </div>
+
+  
 </template>
 
 <script setup lang="ts">
+// Компонент автоматически импортируется Nuxt из components/
+
 // Импорты для SEO
 useHead({
   title: 'Вход в систему - HardCheck',
