@@ -24,7 +24,7 @@
               ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
           ]"
-          @click="activeTab = 'login'"
+                    @click="activeTab = 'login'"
         >
           Вход
         </button>
@@ -101,13 +101,13 @@ const handleLogin = async (data: LoginData) => {
     const result = await login(data)
     
     if (result.success) {
-      const toast = useToast()
-      toast.add({
-        title: 'Успешный вход',
-        description: 'Добро пожаловать в HardCheck!',
-        icon: 'i-heroicons-check-circle',
-        color: 'success'
-      })
+    const toast = useToast()
+    toast.add({
+      title: 'Успешный вход',
+      description: 'Добро пожаловать в HardCheck!',
+      icon: 'i-heroicons-check-circle',
+      color: 'success'
+    })
 
       // Перенаправление на дашборд
       await navigateTo('/dashboard')
@@ -144,13 +144,13 @@ const handleRegister = async (data: RegisterData) => {
     })
     
     if (result.success) {
-      const toast = useToast()
-      toast.add({
-        title: 'Успешная регистрация',
+    const toast = useToast()
+    toast.add({
+      title: 'Успешная регистрация',
         description: 'Аккаунт создан! Добро пожаловать в HardCheck!',
-        icon: 'i-heroicons-check-circle',
-        color: 'success'
-      })
+      icon: 'i-heroicons-check-circle',
+      color: 'success'
+    })
 
       // Перенаправление на дашборд
       await navigateTo('/dashboard')
