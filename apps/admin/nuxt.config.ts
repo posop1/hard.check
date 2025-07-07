@@ -2,12 +2,24 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-07',
   devtools: { enabled: true },
-  
+
+  // Конфигурация сервера разработки
+  devServer: {
+    port: 3001
+  },
+
   // CSS файлы
   css: ['./assets/css/main.css'],
   
   // UI библиотека
   modules: ['@nuxt/ui'],
+  
+  // Конфигурация API
+  runtimeConfig: {
+    public: {
+        apiBase: process.env.API_BASE_URL || 'http://localhost:5003'
+    }
+  },
   
   // Автоматический импорт компонентов из стандартных папок Nuxt
   components: [
@@ -16,7 +28,7 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  
+
   // TypeScript конфигурация
   typescript: {
     typeCheck: true

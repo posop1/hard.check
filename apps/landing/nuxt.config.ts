@@ -2,10 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-07',
   devtools: { enabled: true },
-  
+
   // CSS файлы
   css: ['./assets/css/main.css'],
-  
+
   // UI библиотека
   modules: ['@nuxt/ui'],
   
@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   devServer: {
     port: 3000,
   },
-  
+
   // Автоматический импорт компонентов из стандартных папок Nuxt
   components: [
     {
@@ -21,7 +21,7 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  
+
   // TypeScript конфигурация
   typescript: {
     typeCheck: true

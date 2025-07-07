@@ -18,19 +18,17 @@
       <!-- Переключатель форм -->
       <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mb-6">
         <button
-
           :class="[
             'flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors',
             activeTab === 'login'
               ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
           ]"
-                    @click="activeTab = 'login'"
+          @click="activeTab = 'login'"
         >
           Вход
         </button>
         <button
-
           :class="[
             'flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors',
             activeTab === 'register'
@@ -69,8 +67,6 @@
 </template>
 
 <script setup lang="ts">
-
-
 interface LoginData {
   email: string
   password: string
@@ -84,36 +80,51 @@ interface RegisterData {
   agreeToTerms: boolean
 }
 
+// Инициализация аутентификации
+const { login, register, isAuthenticated } = useAuth()
+
 // Реактивные данные
 const activeTab = ref<'login' | 'register'>('login')
 const loading = ref(false)
+
+// Проверка аутентификации при загрузке
+onMounted(() => {
+  if (isAuthenticated.value) {
+    navigateTo('/dashboard')
+  }
+})
 
 // Обработчик входа
 const handleLogin = async (data: LoginData) => {
   loading.value = true
   try {
-    // Здесь будет вызов фичи авторизации
-    console.log('Попытка входа:', data)
+    const result = await login(data)
     
-    // Симуляция API запроса
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    const toast = useToast()
-    toast.add({
-      title: 'Успешный вход',
-      description: 'Добро пожаловать в HardCheck!',
-      icon: 'i-heroicons-check-circle',
-      color: 'success'
-    })
+    if (result.success) {
+      const toast = useToast()
+      toast.add({
+        title: 'Успешный вход',
+        description: 'Добро пожаловать в HardCheck!',
+        icon: 'i-heroicons-check-circle',
+        color: 'success'
+      })
 
-    // Здесь будет перенаправление на дашборд
-    // await navigateTo('/dashboard')
-    
-  } catch {
+      // Перенаправление на дашборд
+      await navigateTo('/dashboard')
+    } else {
+      const toast = useToast()
+      toast.add({
+        title: 'Ошибка входа',
+        description: result.error || 'Неверный email или пароль',
+        icon: 'i-heroicons-x-circle',
+        color: 'error'
+      })
+    }
+  } catch (error) {
     const toast = useToast()
     toast.add({
       title: 'Ошибка входа',
-      description: 'Неверный email или пароль',
+      description: 'Произошла ошибка при входе в систему',
       icon: 'i-heroicons-x-circle',
       color: 'error'
     })
@@ -126,26 +137,37 @@ const handleLogin = async (data: LoginData) => {
 const handleRegister = async (data: RegisterData) => {
   loading.value = true
   try {
-    console.log('Попытка регистрации:', data)
-    
-    // Симуляция API запроса
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    const toast = useToast()
-    toast.add({
-      title: 'Успешная регистрация',
-      description: 'Аккаунт создан! Проверьте email для подтверждения.',
-      icon: 'i-heroicons-check-circle',
-      color: 'success'
+    const result = await register({
+      email: data.email,
+      password: data.password,
+      name: data.organization
     })
-
-    // Переключение на форму входа произойдет через событие @success
     
-  } catch {
+    if (result.success) {
+      const toast = useToast()
+      toast.add({
+        title: 'Успешная регистрация',
+        description: 'Аккаунт создан! Добро пожаловать в HardCheck!',
+        icon: 'i-heroicons-check-circle',
+        color: 'success'
+      })
+
+      // Перенаправление на дашборд
+      await navigateTo('/dashboard')
+    } else {
+      const toast = useToast()
+      toast.add({
+        title: 'Ошибка регистрации',
+        description: result.error || 'Произошла ошибка при создании аккаунта',
+        icon: 'i-heroicons-x-circle',
+        color: 'error'
+      })
+    }
+  } catch (error) {
     const toast = useToast()
     toast.add({
       title: 'Ошибка регистрации',
-      description: 'Произошла ошибка при создании аккаунта',
+      description: 'Произошла ошибка при регистрации',
       icon: 'i-heroicons-x-circle',
       color: 'error'
     })

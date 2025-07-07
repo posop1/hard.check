@@ -4,14 +4,15 @@
       <AuthForm />
     </div>
   </div>
-
-  
 </template>
 
 <script setup lang="ts">
-// Компонент автоматически импортируется Nuxt из components/
+// Middleware для проверки аутентификации
+definePageMeta({
+  middleware: 'auth'
+})
 
-// Импорты для SEO
+// SEO мета-теги
 useHead({
   title: 'Вход в систему - HardCheck',
   meta: [
